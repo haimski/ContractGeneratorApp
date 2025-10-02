@@ -1,0 +1,604 @@
+{
+    "name": "Contract Generator",
+    "flow": [
+        {
+            "id": 1,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 3299831,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": -44,
+                    "y": -6
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "contract generator webhook"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "builtin:BasicRouter",
+            "version": 1,
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                }
+            },
+            "routes": [
+                {
+                    "flow": [
+                        {
+                            "id": 2,
+                            "module": "google-docs:createADocumentFromTemplate",
+                            "version": 1,
+                            "parameters": {
+                                "__IMTCONN__": 11970361
+                            },
+                            "filter": {
+                                "name": "הסכם לפרוייקט קבוע",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.model}}",
+                                            "b": "fixed",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "from": "drive",
+                                "name": "{{1.goal}}",
+                                "select": "dropdown",
+                                "document": "/10zQbWt797JcugVgppIDXvKzRRB9xsNiN/1UVljVVK7soZm22EB-51mH1iPdIaOO23iS0nyxFuBrwc",
+                                "folderId": "/1gzvU5YsokZUnQyQ_oNYuUm0MXH15WkOX",
+                                "requests": {
+                                    "שם הספק": "{{1.vendor}}",
+                                    "שם הלקוח": "{{1.clientName}}",
+                                    "שם הפרויקט": "{{1.goal}}",
+                                    "שם הפרוייקט": "{{1.goal}}",
+                                    "תאריך חתימה": "{{1.quoteDate}}"
+                                },
+                                "destination": "drive"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 610,
+                                    "y": -366
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "from": {
+                                            "label": "My Drive"
+                                        },
+                                        "select": {
+                                            "label": "By Dropdown"
+                                        },
+                                        "document": {
+                                            "path": [
+                                                "תבניות מסמכים",
+                                                "הסכם מתן שירותים - פרוייקט קבוע"
+                                            ]
+                                        },
+                                        "folderId": {
+                                            "mode": "chose",
+                                            "path": [
+                                                "הסכמי לקוח"
+                                            ]
+                                        },
+                                        "destination": {
+                                            "label": "My Drive"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "google"
+                                            },
+                                            "label": "bina4all Google Connection (bina4allwork@gmail.com)"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:google",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "select",
+                                        "type": "select",
+                                        "label": "Create a Document from a Template",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "map",
+                                                "dropdown"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "name",
+                                        "type": "text",
+                                        "label": "Title",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "destination",
+                                        "type": "select",
+                                        "label": "New Drive Location",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "drive",
+                                                "share",
+                                                "team"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "from",
+                                        "type": "select",
+                                        "label": "Choose a Drive",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "drive",
+                                                "share",
+                                                "team"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "document",
+                                        "type": "file",
+                                        "label": "Document ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "requests",
+                                        "spec": [
+                                            {
+                                                "name": "תאריך חתימה",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "שם הלקוח",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "שם הספק",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "שם הפרוייקט",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "מחיר פרויקט",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "שם הפרויקט",
+                                                "type": "any"
+                                            }
+                                        ],
+                                        "type": "collection",
+                                        "label": "Values"
+                                    },
+                                    {
+                                        "name": "folderId",
+                                        "type": "folder",
+                                        "label": "New Document's Location",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 4,
+                            "module": "google-docs:createADocumentFromTemplate",
+                            "version": 1,
+                            "parameters": {
+                                "__IMTCONN__": 11970361
+                            },
+                            "filter": {
+                                "name": "פרוייקט לפי שעה",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.model}}",
+                                            "b": "hours",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "select": "dropdown",
+                                "name": "{{1.goal}}",
+                                "destination": "drive",
+                                "from": "drive",
+                                "document": "/10zQbWt797JcugVgppIDXvKzRRB9xsNiN/1nr9arUQhOu9OT-_qrm-8F-vbrZBP4cSwCTgZiQ3SiNI",
+                                "requests": {
+                                    "תאריך חתימה": "{{1.quoteDate}}",
+                                    "שם הלקוח": "{{1.clientName}}",
+                                    "שם הספק": "{{1.vendor}}",
+                                    "שם הפרוייקט": "{{1.goal}}",
+                                    "מחיר לשעה": "{{1.hourRate}}",
+                                    "מחיר חודשי כולל": "{{1.hourRate}}"
+                                },
+                                "folderId": "/1gzvU5YsokZUnQyQ_oNYuUm0MXH15WkOX"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 739,
+                                    "y": -82
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "label": "bina4all Google Connection (bina4allwork@gmail.com)",
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "google"
+                                            }
+                                        }
+                                    },
+                                    "expect": {
+                                        "select": {
+                                            "label": "By Dropdown"
+                                        },
+                                        "destination": {
+                                            "label": "My Drive"
+                                        },
+                                        "from": {
+                                            "label": "My Drive"
+                                        },
+                                        "document": {
+                                            "path": [
+                                                "תבניות מסמכים",
+                                                "הסכם מתן שירותים - בנק שעות (ריטיינר)"
+                                            ]
+                                        },
+                                        "folderId": {
+                                            "mode": "chose",
+                                            "path": [
+                                                "הסכמי לקוח"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:google",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "select",
+                                        "type": "select",
+                                        "label": "Create a Document from a Template",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "map",
+                                                "dropdown"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "name",
+                                        "type": "text",
+                                        "label": "Title",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "destination",
+                                        "type": "select",
+                                        "label": "New Drive Location",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "drive",
+                                                "share",
+                                                "team"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "from",
+                                        "type": "select",
+                                        "label": "Choose a Drive",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "drive",
+                                                "share",
+                                                "team"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "document",
+                                        "type": "file",
+                                        "label": "Document ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "requests",
+                                        "type": "collection",
+                                        "label": "Values",
+                                        "spec": [
+                                            {
+                                                "name": "תאריך חתימה",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "שם הלקוח",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "שם הספק",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "שם הפרוייקט",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "מחיר לשעה",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "מחיר חודשי כולל",
+                                                "type": "any"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "folderId",
+                                        "type": "folder",
+                                        "label": "New Document's Location",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 5,
+                            "module": "google-docs:createADocumentFromTemplate",
+                            "version": 1,
+                            "parameters": {
+                                "__IMTCONN__": 11970361
+                            },
+                            "filter": {
+                                "name": "אפיון ללא פרוייקט",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.model}}",
+                                            "b": "discovery",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "select": "dropdown",
+                                "name": "{{1.goal}}",
+                                "destination": "drive",
+                                "from": "drive",
+                                "document": "/10zQbWt797JcugVgppIDXvKzRRB9xsNiN/1iIXgbd6-hh8e6AuXMIqngHzIIOF9wtTCi5XbP4iFy7A",
+                                "requests": {
+                                    "תאריך חתימה": "{{1.quoteDate}}",
+                                    "שם הלקוח": "{{1.clientName}}",
+                                    "שם הספק": "{{1.vendor}}",
+                                    "שם הפרוייקט": "{{1.goal}}",
+                                    "מחיר אפיון": "{{1.discPrice}}"
+                                },
+                                "folderId": "/1gzvU5YsokZUnQyQ_oNYuUm0MXH15WkOX"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 675,
+                                    "y": 209
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "label": "bina4all Google Connection (bina4allwork@gmail.com)",
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "google"
+                                            }
+                                        }
+                                    },
+                                    "expect": {
+                                        "select": {
+                                            "label": "By Dropdown"
+                                        },
+                                        "destination": {
+                                            "label": "My Drive"
+                                        },
+                                        "from": {
+                                            "label": "My Drive"
+                                        },
+                                        "document": {
+                                            "path": [
+                                                "תבניות מסמכים",
+                                                "הסכם מתן שירותים - אפיון בתשלום (ללא פרוייקט)"
+                                            ]
+                                        },
+                                        "folderId": {
+                                            "mode": "chose",
+                                            "path": [
+                                                "הסכמי לקוח"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:google",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "select",
+                                        "type": "select",
+                                        "label": "Create a Document from a Template",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "map",
+                                                "dropdown"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "name",
+                                        "type": "text",
+                                        "label": "Title",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "destination",
+                                        "type": "select",
+                                        "label": "New Drive Location",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "drive",
+                                                "share",
+                                                "team"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "from",
+                                        "type": "select",
+                                        "label": "Choose a Drive",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "drive",
+                                                "share",
+                                                "team"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "document",
+                                        "type": "file",
+                                        "label": "Document ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "requests",
+                                        "type": "collection",
+                                        "label": "Values",
+                                        "spec": [
+                                            {
+                                                "name": "תאריך חתימה",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "שם הלקוח",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "שם הספק",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "שם הפרוייקט",
+                                                "type": "any"
+                                            },
+                                            {
+                                                "name": "מחיר אפיון",
+                                                "type": "any"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "folderId",
+                                        "type": "folder",
+                                        "label": "New Document's Location",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu2.make.com",
+        "notes": []
+    }
+}

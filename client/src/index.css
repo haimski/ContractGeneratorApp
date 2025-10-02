@@ -1,0 +1,33 @@
+:root {
+  --bg: #0f1220;
+  --card: #161a2b;
+  --muted: #a6b0cf;
+  --text: #e7e9f7;
+  --acc: #7c9cff;
+  --ok: #3ddc97;
+  --warn: #ffbd59;
+  --danger: #ff6b6b;
+  --border: #232642;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(180deg, #0f1220, #0b0e1a);
+  color: var(--text);
+  font: 16px/1.5 system-ui, "Segoe UI", Heebo, Rubik, Arial;
+}
+
+#root {
+  min-height: 100vh;
+}

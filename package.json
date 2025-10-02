@@ -1,0 +1,17 @@
+{
+  "name": "quote-generator-mern",
+  "version": "1.0.0",
+  "description": "Quote Generator - MERN Stack Application",
+  "scripts": {
+    "install-all": "cd server && npm install && cd ../client && npm install",
+    "dev": "echo 'Please run backend and frontend separately in different terminals:\n  Terminal 1: cd server && npm run dev\n  Terminal 2: cd client && npm run dev'",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "build": "cd client && npm install && npm run build",
+    "vercel-build": "npm run build",
+    "start": "node server/server.js"
+  },
+  "keywords": ["quote", "generator", "mern", "automation"],
+  "author": "Automation School",
+  "license": "ISC"
+}

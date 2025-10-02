@@ -1,0 +1,26 @@
+# Files to exclude from Vercel deployment
+
+# Server directory (using serverless functions instead)
+server/
+
+# Node modules (will be installed during build)
+node_modules/
+
+# Test and utility files
+test-port-detection.js
+check-setup.sh
+
+# Documentation
+documentation/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
