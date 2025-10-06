@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Analytics } from '@vercel/analytics/react';
 import HomePage from './pages/HomePage';
 import FormPage from './pages/FormPage';
 
@@ -66,6 +67,7 @@ function App() {
           onChangeWebhook={handleChangeWebhook} 
         />
       )}
+      <Analytics />
     </>
   );
 }
