@@ -7,10 +7,15 @@ import FormPage from './pages/FormPage';
 // Configure axios defaults
 axios.defaults.withCredentials = true;
 
-// Only set baseURL if not using Vite dev server (production)
-if (import.meta.env.PROD) {
-  axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+// In production (Vercel), use relative paths - API is at /api/* on same domain
+// In development, Vite proxy handles /api/* requests
+// Only set baseURL if explicitly provided via env variable
+if (import.meta.env.PROD && import.meta.env.VITE_API_URL) {
+  axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 }
+// If no baseURL is set, axios uses relative paths which work for both:
+// - Development: Vite proxy forwards /api/* to backend
+// - Production: Vercel routes /api/* to serverless functions
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -44,7 +49,12 @@ function App() {
     } catch (error) {
       console.error('Webhook submit error:', error);
       if (error.code === 'ERR_NETWORK' || error.message.includes('CORS')) {
-        throw new Error('Cannot connect to server. Make sure the backend server is running on port 5000 (or check console for the actual port).');
+        const isProduction = import.meta.env.PROD;
+        if (isProduction) {
+          throw new Error('Cannot connect to API. Please check your Vercel deployment logs or try refreshing the page.');
+        } else {
+          throw new Error('Cannot connect to server. Make sure the backend server is running on port 5001 (or check console for the actual port).');
+        }
       }
       throw new Error(error.response?.data?.message || 'Failed to save webhook');
     }
