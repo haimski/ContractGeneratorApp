@@ -40,6 +40,24 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Debug middleware - log all incoming requests (before routes)
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`, {
+    headers: req.headers,
+    body: req.body
+  });
+  next();
+});
+
+// Handle OPTIONS requests for CORS preflight (before routes)
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.status(200).end();
+});
+
 // Session configuration
 // Note: For production, consider using a session store like Redis
 app.use(session({
@@ -233,5 +251,6 @@ app.post('/api/submit-feedback', submitFeedbackHandler);
 app.post('/submit-feedback', submitFeedbackHandler);
 
 // Export the Express app for Vercel serverless functions
-// Vercel will automatically handle this as a serverless function
+// Vercel automatically handles /api/index.js as a serverless function
+// The app will receive requests with the full path including /api prefix
 export default app;
