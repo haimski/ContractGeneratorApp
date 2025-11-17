@@ -42,6 +42,10 @@ function App() {
         setCurrentPage('form');
       }
     } catch (error) {
+      console.error('Webhook submit error:', error);
+      if (error.code === 'ERR_NETWORK' || error.message.includes('CORS')) {
+        throw new Error('Cannot connect to server. Make sure the backend server is running on port 5000 (or check console for the actual port).');
+      }
       throw new Error(error.response?.data?.message || 'Failed to save webhook');
     }
   };

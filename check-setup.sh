@@ -24,6 +24,14 @@ fi
 echo ""
 echo "📦 Checking dependencies..."
 
+# Check root dependencies (for concurrently)
+if [ -d "node_modules" ]; then
+    echo "✅ Root dependencies installed"
+else
+    echo "⚠️  Root dependencies not installed"
+    echo "   Run: npm install"
+fi
+
 # Check server dependencies
 if [ -d "server/node_modules" ]; then
     echo "✅ Server dependencies installed"
@@ -123,11 +131,12 @@ else
     echo ""
     echo "📝 To start the application:"
     echo ""
-    echo "Terminal 1 (Backend):"
-    echo "  cd server && npm run dev"
+    echo "Option 1 - Run both together (Recommended):"
+    echo "  npm run dev"
     echo ""
-    echo "Terminal 2 (Frontend):"
-    echo "  cd client && npm run dev"
+    echo "Option 2 - Run separately (2 terminals):"
+    echo "  Terminal 1: cd server && npm run dev"
+    echo "  Terminal 2: cd client && npm run dev"
     echo ""
     echo "Then open: http://localhost:3000"
 fi

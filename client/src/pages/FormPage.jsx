@@ -37,10 +37,26 @@ function FormPage({ webhookUrl, onChangeWebhook }) {
   const [showThankYou, setShowThankYou] = useState(false);
   const [previewHtml, setPreviewHtml] = useState('');
 
-  // Initialize date
+  // Generate proposal number
+  const generateProposalNumber = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    // Generate unique identifier based on timestamp (last 4 digits)
+    const timestamp = now.getTime();
+    const uniqueId = String(timestamp).slice(-4);
+    // Format: Q-YYYY-MMDD-XXXX
+    return `Q-${year}-${month}${day}-${uniqueId}`;
+  };
+
+  // Initialize date and proposal number
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10);
     setQuoteDate(today);
+    // Generate default proposal number on mount
+    setQuoteId(generateProposalNumber());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Calculate fixed items sum

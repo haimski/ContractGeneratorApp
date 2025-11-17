@@ -12,16 +12,21 @@ export default defineConfig(({ mode }) => {
       strictPort: false, // Allow Vite to try next port if 3000 is taken
       proxy: {
         '/api': {
-          target: env.VITE_API_URL || 'http://localhost:5000',
+          // Default to 5001 (common on macOS when 5000 is taken by AirPlay)
+          // Can be overridden with VITE_API_URL env variable
+          target: env.VITE_API_URL || 'http://localhost:5001',
           changeOrigin: true,
           secure: false,
           ws: true,
           configure: (proxy, _options) => {
             proxy.on('error', (err, _req, _res) => {
               console.log('❌ Proxy error:', err.message);
+              console.log('💡 Tip: Backend server might be on a different port.');
+              console.log('   Check server console for the actual port, then set VITE_API_URL in client/.env');
             });
             proxy.on('proxyReq', (proxyReq, req, _res) => {
-              console.log('📤 Sending Request to Backend:', req.method, req.url, '→', env.VITE_API_URL || 'http://localhost:5000');
+              const target = env.VITE_API_URL || 'http://localhost:5001';
+              console.log('📤 Sending Request to Backend:', req.method, req.url, '→', target);
             });
             proxy.on('proxyRes', (proxyRes, req, _res) => {
               console.log('📥 Received Response from Backend:', proxyRes.statusCode, req.url);

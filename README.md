@@ -9,10 +9,12 @@
 
 ```
 congen-mern/
-├── server/              # Backend - Node.js + Express
-│   ├── server.js       # Main server file
-│   └── package.json    # Server dependencies
-├── client/             # Frontend - React + Vite
+├── package.json     # Root package (concurrently for running both)
+├── check-setup.sh     # Setup verification script
+├── server/            # Backend - Node.js + Express
+│   ├── server.js      # Main server file
+│   └── package.json   # Server dependencies
+├── client/            # Frontend - React + Vite
 │   ├── src/
 │   │   ├── components/ # React components
 │   │   ├── pages/      # Page components
@@ -44,15 +46,30 @@ congen-mern/
 - Node.js 16+ ו-npm מותקנים במערכת
 - חיבור אינטרנט (לשליחה ל-Make.com)
 
-### שלב 1: התקן את ה-Backend
+### התקנה מהירה (מומלץ)
 
 ```bash
-cd congen-mern/server
+cd congen-mern
+npm run install-all
+```
+
+זה יתקין את כל התלויות (root, server, client) בפקודה אחת.
+
+### התקנה ידנית
+
+**שלב 1: התקן את ה-Root dependencies (עבור concurrently):**
+```bash
+cd congen-mern
 npm install
 ```
 
-### שלב 2: התקן את ה-Frontend
+**שלב 2: התקן את ה-Backend:**
+```bash
+cd server
+npm install
+```
 
+**שלב 3: התקן את ה-Frontend:**
 ```bash
 cd ../client
 npm install
@@ -60,7 +77,20 @@ npm install
 
 ## 🚀 הרצת האפליקציה
 
-### אופציה 1: הרצה ידנית (2 טרמינלים)
+### אופציה 1: הרצה משותפת (מומלץ - פקודה אחת)
+
+```bash
+cd congen-mern
+npm run dev
+```
+
+זה יריץ את ה-Backend וה-Frontend יחד בטרמינל אחד עם prefixes צבעוניים:
+- **Server** יעלה על: `http://localhost:5000`
+- **Client** יעלה על: `http://localhost:3000`
+
+> 💡 **Tip:** שני השרתים ירוצו במקביל בטרמינל אחד. לחץ `Ctrl+C` כדי לעצור את שניהם יחד.
+
+### אופציה 2: הרצה ידנית (2 טרמינלים)
 
 **טרמינל 1 - Backend:**
 ```bash
@@ -76,7 +106,11 @@ npm run dev
 ```
 האפליקציה תעלה על: `http://localhost:3000`
 
-### אופציה 2: הרצה בפרודקשן
+> 💡 גם ניתן להריץ בנפרד:
+> - `npm run server` - להריץ רק את ה-Backend
+> - `npm run client` - להריץ רק את ה-Frontend
+
+### אופציה 3: הרצה בפרודקשן
 
 **Build Frontend:**
 ```bash
