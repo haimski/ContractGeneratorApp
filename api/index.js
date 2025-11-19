@@ -73,8 +73,20 @@ app.use(session({
 }));
 
 // Routes
-// Vercel handles /api/* routing and may strip the /api prefix
-// Handle both with and without /api prefix for compatibility
+// IMPORTANT: On Vercel, when /api/webhook is requested, it routes to /api/index.js
+// The req.url might be '/api/webhook' OR '/webhook' (Vercel may strip /api prefix)
+// We register routes with BOTH patterns to handle both cases
+
+// Root route for debugging
+app.all('/', (req, res) => {
+  res.json({ 
+    message: 'API root', 
+    method: req.method, 
+    url: req.url,
+    path: req.path,
+    originalUrl: req.originalUrl
+  });
+});
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -250,7 +262,20 @@ const submitFeedbackHandler = async (req, res) => {
 app.post('/api/submit-feedback', submitFeedbackHandler);
 app.post('/submit-feedback', submitFeedbackHandler);
 
+// Catch-all route for debugging - log unmatched requests
+app.use((req, res, next) => {
+  console.log('⚠️  Unmatched request:', req.method, req.url, req.path, req.originalUrl);
+  res.status(404).json({ 
+    error: 'Route not found', 
+    method: req.method, 
+    url: req.url,
+    path: req.path,
+    originalUrl: req.originalUrl,
+    info: 'Check server logs for registered routes'
+  });
+});
+
 // Export the Express app for Vercel serverless functions
-// Vercel automatically handles /api/index.js as a serverless function
-// The app will receive requests with the full path including /api prefix
+// Vercel automatically wraps Express apps in serverless functions
+// Make sure all routes are registered before this export
 export default app;
