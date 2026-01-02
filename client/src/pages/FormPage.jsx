@@ -323,7 +323,7 @@ function FormPage({ webhookUrl, onChangeWebhook }) {
 
   return (
     <div className="form-page">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} action={webhookUrl || undefined} method="POST">
         <div className="container">
           <header className="section-title">
             <div>
