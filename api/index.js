@@ -184,7 +184,9 @@ app.delete('/webhook', (req, res) => {
 
 // Submit quote to Make.com webhook
 const submitQuoteHandler = async (req, res) => {
-  const webhookUrl = req.session.webhook_url;
+  // Try to get webhook URL from request body first (for Vercel serverless)
+  // Fall back to session (for local development)
+  const webhookUrl = req.body.webhook_url || req.session?.webhook_url;
   
   if (!webhookUrl) {
     return res.status(400).json({ 
@@ -193,13 +195,22 @@ const submitQuoteHandler = async (req, res) => {
     });
   }
   
+  // Validate webhook URL format
+  const webhookPattern = /^https:\/\/hook\..*\.make\.com\/.+/;
+  if (!webhookPattern.test(webhookUrl)) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Invalid webhook URL format' 
+    });
+  }
+  
   try {
     // Forward the quote data to Make.com webhook
     const formData = new URLSearchParams();
     
-    // Add all fields from request body
+    // Add all fields from request body (except webhook_url which is not sent to Make)
     Object.keys(req.body).forEach(key => {
-      if (req.body[key] !== null && req.body[key] !== undefined && req.body[key] !== '') {
+      if (key !== 'webhook_url' && req.body[key] !== null && req.body[key] !== undefined && req.body[key] !== '') {
         formData.append(key, req.body[key]);
       }
     });

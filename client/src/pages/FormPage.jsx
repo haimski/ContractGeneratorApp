@@ -306,6 +306,11 @@ function FormPage({ webhookUrl, onChangeWebhook }) {
       }
     }
 
+    // Include webhook URL in payload (for Vercel serverless functions where sessions don't persist)
+    if (webhookUrl) {
+      payload.webhook_url = webhookUrl;
+    }
+
     try {
       await axios.post('/api/submit-quote', payload);
       setShowThankYou(true);
