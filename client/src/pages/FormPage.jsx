@@ -115,6 +115,15 @@ function FormPage({ webhookUrl, onChangeWebhook }) {
     })));
   }, [hourRate]);
 
+  // Auto-update fixedTotal when fixedItems change (only for fixed model)
+  useEffect(() => {
+    if (model === 'fixed') {
+      const sum = fixedItems.reduce((total, item) => total + (parseFloat(item.price) || 0), 0);
+      setFixedTotal(sum > 0 ? sum.toString() : '');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fixedItems, model]);
+
   // Collect all form data
   const collectData = () => {
     const base = {
