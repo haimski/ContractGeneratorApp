@@ -211,15 +211,24 @@ const submitQuoteHandler = async (req, res) => {
     // Add all fields from request body (except webhook_url which is not sent to Make)
     Object.keys(req.body).forEach(key => {
       if (key !== 'webhook_url' && req.body[key] !== null && req.body[key] !== undefined && req.body[key] !== '') {
-        formData.append(key, req.body[key]);
+        // Convert value to string - handle objects/arrays by stringifying them
+        let value = req.body[key];
+        if (typeof value === 'object' && !Array.isArray(value)) {
+          value = JSON.stringify(value);
+        } else if (Array.isArray(value)) {
+          value = JSON.stringify(value);
+        } else {
+          value = String(value);
+        }
+        formData.append(key, value);
       }
     });
     
     // Send to Make.com
+    // axios automatically handles URLSearchParams and sets Content-Type correctly
     await axios.post(webhookUrl, formData, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+      timeout: 8000, // 8 seconds timeout (less than Vercel's 10s limit)
+      maxRedirects: 5
     });
     
     res.json({ 
@@ -227,11 +236,20 @@ const submitQuoteHandler = async (req, res) => {
       message: 'Quote submitted successfully' 
     });
   } catch (error) {
-    console.error('Error submitting to webhook:', error.message);
-    // Return success anyway (Make webhooks often don't return proper responses)
-    res.json({ 
-      success: true, 
-      message: 'Quote submitted successfully' 
+    console.error('Error submitting to webhook:', {
+      message: error.message,
+      code: error.code,
+      response: error.response?.status,
+      webhookUrl: webhookUrl,
+      data: error.response?.data
+    });
+    
+    // Return error details to client so they know what went wrong
+    return res.status(500).json({ 
+      success: false, 
+      message: 'Failed to submit to Make.com webhook',
+      error: error.message,
+      details: error.response?.data || 'Network or timeout error'
     });
   }
 };
